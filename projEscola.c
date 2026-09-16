@@ -18,12 +18,6 @@ infoAlunosProfs;
 // LEMBRAR DE COLOCAR ESSAS 3 VARIAVEIS ABAIXO NO MAIN
 // E PASSAR ELAS POR PARAMETROS (de galho em galho)
 
-// questionar se qtdAlunosCadastrados nao pode realmente ser 
-// uma variavel global, pq passar ela toda hora por parametros
-// e ter q ficar retornando o valor dela para ela msm
-// e ainda ajeitar as condicoes da variavel saida para 
-// conversar certinho com os retornos de qtdAlunosCadastrados (gambiarra)
-
 int qtdAlunosCadastrados = 0;
 infoAlunosProfs aluno[maxNomes];
 infoAlunosProfs professor[maxNomes];
