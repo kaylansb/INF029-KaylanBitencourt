@@ -25,7 +25,7 @@ void painelCadastro();
 // int informacaoAlunos(int opcao);
 // int infoCadastroAlunos(int opcao);
 void cadastrarAluno(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados);
-int cadastrarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados);
+void cadastrarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados);
 int validarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados, int penultmDigito, int ultmDigito);
 int validarNascimento(infoAlunosProfs aluno[], int idxAluno);
 void atualizarCadastroAlunos(infoAlunosProfs aluno[], int qtdAlunosCadastrados);
@@ -243,7 +243,7 @@ void painelCadastro(){
 // }
 
 int validarNascimento(infoAlunosProfs aluno[], int idxAluno){
-    int ehValido;
+    int dataValida;
     int dia, mes, ano;
     
     dia = aluno[idxAluno].dataNasc / 1000000; 
@@ -251,15 +251,15 @@ int validarNascimento(infoAlunosProfs aluno[], int idxAluno){
     ano = aluno[idxAluno].dataNasc % 10000;
     
     if (ano > 2026 || ano < 1900) // poderia botar tudo em uma linha só
-        ehValido = FALSE;       // mas acho q assim fica mais organizado/legível.
+        dataValida = FALSE;       // mas acho q assim fica mais organizado/legível.
     else if (mes > 12 || mes < 1)
-        ehValido = FALSE;
+        dataValida = FALSE;
     else if (dia > 31 || dia < 1)
-        ehValido = FALSE;
+        dataValida = FALSE;
     else
-        ehValido = TRUE;
+        dataValida = TRUE;
         
-    return ehValido;
+    return dataValida;
 }
 
 int validarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados, int penultmDigito, int ultmDigito){
@@ -300,7 +300,7 @@ int validarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados, 
         return FALSE;
 }
 
-int cadastrarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados){
+void cadastrarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados){
     char cpfTemp[cpfTam + 3 + 2]; // para aceitar separacoes padrao do cpf ('.' e '-'), \n e \0
     int penultmDigito, ultmDigito, cpfEhValido = FALSE;
     int icont, jcont;
@@ -326,8 +326,6 @@ int cadastrarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados
                 printf("Erro! CPF Inválido!\n");
         }
     }
-    
-    return cpfEhValido;
 }
 
 void cadastrarAluno(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados){
@@ -355,9 +353,7 @@ void cadastrarAluno(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastra
     }
     cadastroValido = FALSE;
     
-    while (cadastroValido == FALSE){
-        cadastroValido = cadastrarCPF(aluno, idxAluno, qtdAlunosCadastrados);
-    }
+    cadastrarCPF(aluno, idxAluno, qtdAlunosCadastrados);
     
     printf("Cadastro realizado com sucesso!\n");
     
@@ -487,8 +483,7 @@ void buscarCadastrado(infoAlunosProfs aluno[], char nomeBusca[], int qtdAlunosCa
 // todas as letras que foram digitadas na busca, esse nome é exibido.
     int icont, jcont, kcont, tam;
     int achou = FALSE;
-    for (icont = 0; nomeBusca[icont] != '\n'; icont++)
-        printf("%c-%d\n", nomeBusca[icont], icont);
+    for (icont = 0; nomeBusca[icont] != '\n'; icont++);
     tam = icont;
     if (tam < minLetrasBusca)
         printf("Letras insuficientes para busca!\n");
