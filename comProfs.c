@@ -197,7 +197,6 @@ int main(){
 
                 } // do while
                 saida = FALSE;
-                }
                 break;
             }
             case 3: {
@@ -460,7 +459,7 @@ int trocaValores(int ordem[], int cont){
     return TRUE;
 }
 
-void listarAlunos(infoAlunosProfs pessoa[], int qtdPesssoasCadastradas){
+void listarPessoas(infoAlunosProfs pessoa[], int qtdPesssoasCadastradas){
     int icont;
     for (icont = 0; icont < qtdPesssoasCadastradas; icont++)
         printf("%s", pessoa[icont].nome);
