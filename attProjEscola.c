@@ -4,50 +4,69 @@
 #define maxCaracPorNome (maxCarac / maxNomes)
 #define maxNomeSexTam 9+1+1 // o nome "masculino" + \n + \0
 #define cpfTam 11
+#define maxCaracSemestre 8 // ano (4 carac) + '.' + semestre + \n + \0 
 #define TRUE 1
 #define FALSE 0
 #define minLetrasBusca 3
 
 typedef struct {
     int matricula;
-    char nome[maxCarac];
+    char nome[maxCaracPorNome];
     char sexo[maxNomeSexTam];
     int dataNasc;
     int cpf[cpfTam];
 }
 infoAlunosProfs;
 
+typedef struct {
+    char nome[maxCaracPorNome];
+    int codigo;
+    char semestre[maxCaracSemestre];
+    char professor[maxCaracPorNome];
+}
+infoDisciplinas;
+
 void painelOpcoes();
-void painelInformacoes();
+
+void painelInformacoesAlunosProfs();
+
+void painelInformacoesDisplinas();
+
 void painelCadastro();
 
-
-// int informacaoAlunos(int opcao);
-// int infoCadastroAlunos(int opcao);
-void cadastrarAluno(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados);
-void cadastrarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados);
-int validarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados, int penultmDigito, int ultmDigito);
-int validarNascimento(infoAlunosProfs aluno[], int idxAluno);
-void atualizarCadastroAlunos(infoAlunosProfs aluno[], int qtdAlunosCadastrados);
-void listarAlunos(infoAlunosProfs aluno[], int qtdAlunosCadastrados);
-void listarNomesOrdem(infoAlunosProfs aluno[], int qtdAlunosCadastrados);
-void listarSexo(infoAlunosProfs aluno[], int qtdAlunosCadastrados);
-void listarNascimento(infoAlunosProfs aluno[], int qtdAlunosCadastrados);
+void cadastrarPessoa(infoAlunosProfs pessoa[], int idxPessoa, int qtdPessoasCadastrados);
+void cadastrarCPF(infoAlunosProfs pessoa[], int idxPessoa, int qtdPessoasCadastrados);
+int validarMatricula(infoAlunosProfs pessoa[], int idxPessoa, int qtdPessoasCadastradas);
+int validarCPF(infoAlunosProfs pessoa[], int idxPessoa, int qtdPessoasCadastrados, int penultmDigito, int ultmDigito);
+int validarNascimento(infoAlunosProfs pessoa[], int idxPessoa);
+void atualizarCadastroPessoa(infoAlunosProfs pessoa[], int qtdPessoasCadastrados);
+void listarPessoas(infoAlunosProfs pessoa[], int qtdPessoasCadastrados);
+void listarNomesOrdem(infoAlunosProfs pessoa[], int qtdPessoasCadastrados);
+void listarSexo(infoAlunosProfs pessoa[], int qtdPessoasCadastrados);
+void listarNascimento(infoAlunosProfs pessoa[], int qtdPessoasCadastrados);
 
 
 int trocaValores(int ordem[], int cont);
 
 
-void buscarCadastrado(infoAlunosProfs aluno[], char nomeBusca[], int qtdAlunosCadastrados);
-void listarAniversariantes(infoAlunosProfs aluno[], int mesAtual, int qtdAlunosCadastrados);
+void cadastrarDisciplina(infoDisciplinas disciplina[], int idxDisciplina);
+void atualizarCadastroDisciplina(infoDisciplinas disciplina[], int qtdDisplinasCadastradas);
+
+
+void buscarCadastrado(infoAlunosProfs aluno[], infoAlunosProfs professor[], int qtdAlunosCadastrados, int qtdProfsCadastrados, char nomeBusca[]);
+void listarAniversariantes(infoAlunosProfs aluno[], infoAlunosProfs professor[], int qtdAlunosCadastrados, int qtdProfsCadastrados, int mesAtual);
 
 
 
 int main(){
     infoAlunosProfs aluno[maxNomes];
-    // infoAlunosProfs professor[maxNomes];
+    infoAlunosProfs professor[maxNomes];
     int qtdAlunosCadastrados = 0;
-    
+    int qtdProfsCadastrados = 0;
+
+    infoDisciplinas disciplina[maxNomes];
+    int qtdDisplinasCadastradas = 0;
+
     int saida, opcao, mesAtual;
     char nomeBusca[maxCaracPorNome];
     saida = FALSE;
@@ -64,10 +83,10 @@ int main(){
             }
             case 1: {
                 while (saida == FALSE){
-                    painelInformacoes();
+                    painelInformacoesAlunosProfs();
                     scanf("%d", &opcao);
                     getchar();
-                
+
                     switch (opcao){
                         case 0: {
                             saida = TRUE;
@@ -78,34 +97,38 @@ int main(){
                                 painelCadastro();
                                 scanf("%d", &opcao);
                                 getchar();
-                        
+
                                 switch (opcao){
                                     case 0: {
                                         saida = TRUE;
                                         break;
                                     }
                                     case 1: {
-                                        cadastrarAluno(aluno, qtdAlunosCadastrados, qtdAlunosCadastrados);
+                                        cadastrarPessoa(aluno, qtdAlunosCadastrados, qtdAlunosCadastrados);
                                         qtdAlunosCadastrados++;
                                         break;
                                     }
                                     case 2: {
-                                        atualizarCadastroAlunos(aluno, qtdAlunosCadastrados);
+                                        atualizarCadastroPessoa(aluno, qtdAlunosCadastrados);
                                         break;
                                     }
-                                    case 3: {
-                                        qtdAlunosCadastrados--;
-                                        printf("Cadastro Deletado!\n");
+                                    case 3: { // botar isso em uma funcao
+                                        if (qtdAlunosCadastrados == 0)
+                                            printf("Erro! Cadastros Insuficientes!");
+                                        else {
+                                            qtdAlunosCadastrados--;
+                                            printf("Cadastro Deletado!\n");
+                                        }
                                         break;
                                     }
                                 }
-                        
-                            } // do while
+
+                            }
                             saida = FALSE;
                             break;
                         }
                         case 2: {
-                            listarAlunos(aluno, qtdAlunosCadastrados);
+                            listarPessoas(aluno, qtdAlunosCadastrados);
                             break;
                         }
                         case 3: {
@@ -121,29 +144,163 @@ int main(){
                             break;
                         }
                     }
-                
-                } // do while
+
+                }
                 saida = FALSE;
                 break;
             }
             case 2: {
-                printf("Voce esta na pagina professor\n");
+                while (saida == FALSE){
+                    painelInformacoesAlunosProfs();
+                    scanf("%d", &opcao);
+                    getchar();
+
+                    switch (opcao){
+                        case 0: {
+                            saida = TRUE;
+                            break;
+                        }
+                        case 1: {
+                            while (saida == FALSE){
+                                painelCadastro();
+                                scanf("%d", &opcao);
+                                getchar();
+
+                                switch (opcao){
+                                    case 0: {
+                                        saida = TRUE;
+                                        break;
+                                    }
+                                    case 1: {
+                                        cadastrarPessoa(professor, qtdProfsCadastrados, qtdProfsCadastrados);
+                                        qtdProfsCadastrados++;
+                                        break;
+                                    }
+                                    case 2: {
+                                        atualizarCadastroPessoa(professor, qtdProfsCadastrados);
+                                        break;
+                                    }
+                                    case 3: { // botar isso em uma funcao
+                                        if (qtdProfsCadastrados == 0)
+                                            printf("Erro! Cadastros Insuficientes!");
+                                        else {
+                                            qtdProfsCadastrados--;
+                                            printf("Cadastro Deletado!\n");
+                                        }
+                                        break;
+                                    }
+                                } 
+
+                            }
+                            saida = FALSE;
+                            break;
+                        }
+                        case 2: {
+                            listarPessoas(professor, qtdProfsCadastrados);
+                            break;
+                        }
+                        case 3: {
+                            listarNomesOrdem(professor, qtdProfsCadastrados);
+                            break;
+                        }
+                        case 4: {
+                            listarSexo(professor, qtdProfsCadastrados);
+                            break;
+                        }
+                        case 5: {
+                            listarNascimento(professor, qtdProfsCadastrados);
+                            break;
+                        }
+                    }
+
+                }
+                saida = FALSE;
                 break;
             }
             case 3: {
-                printf("Voce esta na pagina disciplina\n");
+                while (saida == FALSE){
+                    painelInformacoesDisplinas();
+                    scanf("%d", &opcao);
+                    getchar();
+
+                    switch (opcao){
+                        case 0: {
+                            saida = TRUE;
+                            break;
+                        }
+                        case 1: {
+                            while (saida == FALSE){
+                                painelCadastro();
+                                scanf("%d", &opcao);
+                                getchar();
+
+                                switch (opcao){
+                                    case 0: {
+                                        saida = TRUE;
+                                        break;
+                                    }
+                                    case 1: {
+                                        cadastrarDisciplina(disciplina, qtdDisplinasCadastradas);
+                                        qtdDisplinasCadastradas++;
+                                        break;
+                                    }
+                                    case 2: {
+                                        atualizarCadastroDisciplina(disciplina, qtdDisplinasCadastradas);
+                                        break;
+                                    }
+                                    case 3: { // botar isso em uma funcao
+                                        if (qtdDisplinasCadastradas == 0)
+                                            printf("Erro! Cadastros Insuficientes!\n");
+                                        else {
+                                            qtdDisplinasCadastradas--;
+                                            printf("Cadastro Deletado Com Sucesso!\n");
+                                        }    
+                                        break;
+                                    }
+                                }
+                            }
+                            saida = FALSE;
+                            break;
+                        }
+                        case 2: {
+                            // inserir aluno/prof em disciplina
+                            break;
+                        }
+                        case 3: {
+                            // excluir aluno/prof de disciplina
+                            break;
+                        }
+                        case 4: {
+                            // listar disciplinas
+                            break;
+                        }
+                        case 5: {
+                            // lista alunos em menos de 3 disciplinas
+                            break;
+                        }
+                        case 6: {
+                            // displinas com 40+ vagas
+                            break;
+                        }
+                    }
+                }
+                saida = FALSE;
                 break;
             }
             case 4: {
-                printf("Digite o nome procurado:\n");
-                fgets (nomeBusca, maxCaracPorNome, stdin);
-                buscarCadastrado(aluno, nomeBusca, qtdAlunosCadastrados);
+                if (qtdAlunosCadastrados == 0 && qtdProfsCadastrados == 0)
+                    printf("Erro! Cadastros Insuficientes!\n");
+                else {
+                    printf("Digite o nome procurado:\n");
+                    fgets (nomeBusca, maxCaracPorNome, stdin);
+                    buscarCadastrado(aluno, professor, qtdAlunosCadastrados, qtdProfsCadastrados, nomeBusca);
+                }
                 break;
             }
             case 5: {
                 printf("Digite o mes atual:\n");
                 scanf("%d", &mesAtual);
-                listarAniversariantes(aluno, mesAtual, qtdAlunosCadastrados);
+                listarAniversariantes(aluno, professor, qtdAlunosCadastrados, qtdProfsCadastrados, mesAtual);
                 break;
             }
         }
@@ -162,7 +319,7 @@ void painelOpcoes(){
     printf("5 - Aniversariantes do Mes\n");
 }
 
-void painelInformacoes(){
+void painelInformacoesAlunosProfs(){
     printf("Escolha uma das opcoes para realizar:\n");
     printf("0 - Voltar\n");
     printf("1 - Cadastros\n");
@@ -178,6 +335,17 @@ void painelCadastro(){
     printf("1 - Novo Cadastro\n");
     printf("2 - Atualizar Cadastro\n");
     printf("3 - Deletar Cadastro\n");
+}
+
+void painelInformacoesDisplinas(){
+    printf("Escolha uma das opcoes para realizar:\n");
+    printf("0 - Voltar\n");
+    printf("1 - Cadastros de Disciplinas\n");
+    printf("2 - Inserir Alunos/Professores\n");
+    printf("3 - Excluir Alunos/Professores\n");
+    printf("4 - Listar As Disciplinas\n");
+    printf("5 - Listar Alunos Em Menos de 3 Disciplinas\n");
+    printf("6 - Listar Disciplinas Com 40+ Vagas\n");
 }
 
 // int informacaoAlunos(int opcao){
@@ -238,18 +406,18 @@ void painelCadastro(){
 //             break;
 //         }
 //     }
-    
+
 //     return FALSE;
 // }
 
-int validarNascimento(infoAlunosProfs aluno[], int idxAluno){
+int validarNascimento(infoAlunosProfs pessoa[], int idxPessoa){
     int dataValida;
     int dia, mes, ano;
-    
-    dia = aluno[idxAluno].dataNasc / 1000000; 
-    mes = (aluno[idxAluno].dataNasc % 1000000) / 10000;
-    ano = aluno[idxAluno].dataNasc % 10000;
-    
+
+    dia = pessoa[idxPessoa].dataNasc / 1000000; 
+    mes = (pessoa[idxPessoa].dataNasc % 1000000) / 10000;
+    ano = pessoa[idxPessoa].dataNasc % 10000;
+
     if (ano > 2026 || ano < 1900) // poderia botar tudo em uma linha só
         dataValida = FALSE;       // mas acho q assim fica mais organizado/legível.
     else if (mes > 12 || mes < 1)
@@ -258,18 +426,18 @@ int validarNascimento(infoAlunosProfs aluno[], int idxAluno){
         dataValida = FALSE;
     else
         dataValida = TRUE;
-        
+
     return dataValida;
 }
 
-int validarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados, int penultmDigito, int ultmDigito){
+int validarCPF(infoAlunosProfs pessoa[], int idxPessoa, int qtdPessoasCadastradas, int penultmDigito, int ultmDigito){
     int icont, jcont;
     int digito1 = 0, digito2 = 0;
-    
+    // validar para todas as pessoas (com profs)
     icont = 0;
-    while (icont < qtdAlunosCadastrados){
+    while (icont < qtdPessoasCadastradas){
         jcont = 0;
-        while (aluno[idxAluno].cpf[jcont] == aluno[icont].cpf[jcont] && jcont < cpfTam && icont != idxAluno){
+        while (pessoa[idxPessoa].cpf[jcont] == pessoa[icont].cpf[jcont] && jcont < cpfTam && icont != idxPessoa){
             jcont++;
         }
         if (jcont == cpfTam){
@@ -279,39 +447,39 @@ int validarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados, 
     }
 
     for (icont = 0, jcont = cpfTam; icont < cpfTam - 2; icont++, jcont--){
-        digito1 += (aluno[idxAluno].cpf[icont] * (jcont - 1));
-        digito2 += (aluno[idxAluno].cpf[icont] * jcont);
+        digito1 += (pessoa[idxPessoa].cpf[icont] * (jcont - 1));
+        digito2 += (pessoa[idxPessoa].cpf[icont] * jcont);
     }
-    
+
     digito1 %= cpfTam;
     digito1 = (cpfTam - digito1);
     if (digito1 == cpfTam - 1 || digito1 == cpfTam)
         digito1 = 0;
-    
+
     digito2 += (digito1 * 2);
     digito2 %= cpfTam;
     digito2 = (cpfTam - digito2);
     if (digito2 == cpfTam - 1 || digito2 == cpfTam)
         digito2 = 0;
-    
+
     if (penultmDigito == digito1 && ultmDigito == digito2)
         return TRUE;
     else
         return FALSE;
 }
 
-void cadastrarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados){
+void cadastrarCPF(infoAlunosProfs pessoa[], int idxPessoa, int qtdPessoasCadastradas){
     char cpfTemp[cpfTam + 3 + 2]; // para aceitar separacoes padrao do cpf ('.' e '-'), \n e \0
     int penultmDigito, ultmDigito, cpfEhValido = FALSE;
     int icont, jcont;
-    
+
     while (!cpfEhValido){
-        printf("Digite seu CPF:\n");
+        printf("Digite seu CPF: ");
         fgets (cpfTemp, cpfTam + 3 + 2, stdin);
-        
+
         for (icont = 0, jcont = 0; jcont < cpfTam && cpfTemp[icont] != '\n'; icont++){
             if (cpfTemp[icont] >= '0' && cpfTemp[icont] <= '9'){
-                aluno[idxAluno].cpf[jcont] = cpfTemp[icont] - '0';
+                pessoa[idxPessoa].cpf[jcont] = cpfTemp[icont] - '0';
                 jcont++;
             }
         }
@@ -319,153 +487,170 @@ void cadastrarCPF(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrado
         if (jcont != cpfTam)
             printf("Erro! CPF com quantidade de dígitos incorreta!\n");
         else {
-            penultmDigito = aluno[idxAluno].cpf[cpfTam - 2];
-            ultmDigito = aluno[idxAluno].cpf[cpfTam - 1];
-            cpfEhValido = validarCPF(aluno, idxAluno, qtdAlunosCadastrados, penultmDigito, ultmDigito);
+            penultmDigito = pessoa[idxPessoa].cpf[cpfTam - 2];
+            ultmDigito = pessoa[idxPessoa].cpf[cpfTam - 1];
+            cpfEhValido = validarCPF(pessoa, idxPessoa, qtdPessoasCadastradas, penultmDigito, ultmDigito);
             if (!cpfEhValido)
                 printf("Erro! CPF Inválido!\n");
         }
     }
 }
 
-void cadastrarAluno(infoAlunosProfs aluno[], int idxAluno, int qtdAlunosCadastrados){
+int validarMatricula(infoAlunosProfs pessoa[], int idxPessoa, int qtdPessoasCadastradas){
+    int icont;
+    int matriculaValida = TRUE;
+
+    for (icont = 0; icont < qtdPessoasCadastradas; icont++){
+        if (pessoa[idxPessoa].matricula == pessoa[icont].matricula && icont != idxPessoa){
+            matriculaValida = FALSE;
+            break;
+        }
+    }
+
+    return matriculaValida;
+}
+
+void cadastrarPessoa(infoAlunosProfs pessoa[], int idxPessoa, int qtdPessoasCadastradas){
     int cadastroValido = FALSE;
-    
-//     printf("Digite o Número de Matrícula: ");
-//     scanf("%d", &aluno[idxAluno].matricula);
-//     getchar();
-    
-    printf("Digite o Nome: "); //**
-    fgets(aluno[idxAluno].nome, maxCaracPorNome, stdin);
-    
+
+    while (cadastroValido == FALSE){
+        printf("Digite o Número de Matrícula: ");
+        scanf("%d", &pessoa[idxPessoa].matricula);
+        getchar();
+        cadastroValido = validarMatricula(pessoa, idxPessoa, qtdPessoasCadastradas);
+        if (!cadastroValido)
+            printf("Essa matrícula já existe!\n");
+    }
+    cadastroValido = FALSE;
+
+    printf("Digite o Nome: "); 
+    fgets(pessoa[idxPessoa].nome, maxCaracPorNome, stdin);
+
     //obs: problema se ultrapassar maxtam
-    
-    printf("Digite o Sexo: "); //**?
-    fgets (aluno[idxAluno].sexo, maxNomeSexTam, stdin);
-        
+
+    printf("Digite o Sexo: ");
+    fgets (pessoa[idxPessoa].sexo, maxNomeSexTam, stdin);
+
     while (cadastroValido == FALSE){
         printf("Digite a Data de Nascimento: ");
-        scanf("%d", &aluno[idxAluno].dataNasc);
+        scanf("%d", &pessoa[idxPessoa].dataNasc);
         getchar();
-        cadastroValido = validarNascimento(aluno, idxAluno);
+        cadastroValido = validarNascimento(pessoa, idxPessoa);
         if (cadastroValido == FALSE)
             printf("Dados inválidos! Tente novamente.\n");
     }
     cadastroValido = FALSE;
-    
-    cadastrarCPF(aluno, idxAluno, qtdAlunosCadastrados);
-    
+
+    cadastrarCPF(pessoa, idxPessoa, qtdPessoasCadastradas);
+
     printf("Cadastro realizado com sucesso!\n");
-    
+
 }
 
-void atualizarCadastroAlunos(infoAlunosProfs aluno[], int qtdAlunosCadastrados){
+void atualizarCadastroPessoa(infoAlunosProfs pessoa[], int qtdPessoasCadastradas){
     int numMatricula;
     int icont, idxAtualizar = -1;
     printf("Digite o número de matrícula da pessoa que deseja atualizar o cadastro:\n");
     scanf("%d", &numMatricula);
     getchar();
-    
-    for (icont = 0; icont < qtdAlunosCadastrados; icont++){
-        if (numMatricula == aluno[icont].matricula)
+
+    for (icont = 0; icont < qtdPessoasCadastradas; icont++){
+        if (numMatricula == pessoa[icont].matricula)
             idxAtualizar = icont;
     }
     if (idxAtualizar >= 0){
         printf("Digite os novos dados do cadastro:\n");
-        cadastrarAluno(aluno, idxAtualizar, qtdAlunosCadastrados);
+        cadastrarPessoa(pessoa, idxAtualizar, qtdPessoasCadastradas);
     }
     else
         printf("Número de matrícula não encontrado!\n");
 }
 
-// quando for fazer a parte dos profs, lembrar dessa funcao q pode ser reutilizada,
-// seja criando uma variavel qtdCadastrosTotais e colocando dentro dos colchetes aq 
-// ou qualquer outra ideia q venha na sua cabecinha do futuro ai
 int trocaValores(int ordem[], int cont){
     int ligacao;
     ligacao = ordem[cont];
     ordem[cont] = ordem[cont + 1];
     ordem[cont + 1] = ligacao;
-    
+
     return TRUE;
 }
 
-void listarAlunos(infoAlunosProfs aluno[], int qtdAlunosCadastrados){
+void listarPessoas(infoAlunosProfs pessoa[], int qtdPessoasCadastradas){
     int icont;
-    for (icont = 0; icont < qtdAlunosCadastrados; icont++)
-        printf("%s", aluno[icont].nome);
+    for (icont = 0; icont < qtdPessoasCadastradas; icont++)
+        printf("%s", pessoa[icont].nome);
 }
 
-void listarNomesOrdem(infoAlunosProfs aluno[], int qtdAlunosCadastrados){
+void listarNomesOrdem(infoAlunosProfs pessoa[], int qtdPessoasCadastradas){
     int icont, jcont, kcont, lcont;
     int trocou = TRUE;
-    int ordem[qtdAlunosCadastrados];
-    
-    for (icont = 0; icont < qtdAlunosCadastrados; icont++){
-        if (aluno[icont].nome[0] >= 'A' && aluno[icont].nome[0] <= 'Z')
-            aluno[icont].nome[0] += 32;
+    int ordem[qtdPessoasCadastradas];
+
+    for (icont = 0; icont < qtdPessoasCadastradas; icont++){
+        if (pessoa[icont].nome[0] >= 'A' && pessoa[icont].nome[0] <= 'Z')
+            pessoa[icont].nome[0] += 32;
         ordem[icont] = icont;
     }
-    
-    for (icont = 0, jcont = 0; icont < qtdAlunosCadastrados - 1 && trocou; icont++){
+
+    for (icont = 0, jcont = 0; icont < qtdPessoasCadastradas - 1 && trocou; icont++){
         trocou = FALSE;
-        for (kcont = 0, lcont = 0; kcont < qtdAlunosCadastrados - 1 - icont; kcont++){
-            while (aluno[ordem[kcont]].nome[jcont] == aluno[ordem[kcont + 1]].nome[lcont] && aluno[ordem[kcont]].nome[jcont]){
+        for (kcont = 0, lcont = 0; kcont < qtdPessoasCadastradas - 1 - icont; kcont++){
+            while (pessoa[ordem[kcont]].nome[jcont] == pessoa[ordem[kcont + 1]].nome[lcont] && pessoa[ordem[kcont]].nome[jcont]){
                 jcont++;
                 lcont++;
-                if (aluno[ordem[kcont]].nome[jcont] == ' ' || aluno[ordem[kcont]].nome[jcont] == '\n')
+                if (pessoa[ordem[kcont]].nome[jcont] == ' ' || pessoa[ordem[kcont]].nome[jcont] == '\n')
                     jcont++;
-                
-                if (aluno[ordem[kcont + 1]].nome[lcont] == ' ' || aluno[ordem[kcont + 1]].nome[lcont] == '\n')
+
+                if (pessoa[ordem[kcont + 1]].nome[lcont] == ' ' || pessoa[ordem[kcont + 1]].nome[lcont] == '\n')
                     lcont++;
-                
-                if (aluno[ordem[kcont]].nome[jcont] >= 'A' && aluno[ordem[kcont]].nome[jcont] <= 'Z')
-                    aluno[ordem[kcont]].nome[jcont] += 32;
-                    
-                if (aluno[ordem[kcont + 1]].nome[lcont] >= 'A' && aluno[ordem[kcont + 1]].nome[lcont] <= 'Z')
-                    aluno[ordem[kcont + 1]].nome[lcont] += 32;
+
+                if (pessoa[ordem[kcont]].nome[jcont] >= 'A' && pessoa[ordem[kcont]].nome[jcont] <= 'Z')
+                    pessoa[ordem[kcont]].nome[jcont] += 32;
+
+                if (pessoa[ordem[kcont + 1]].nome[lcont] >= 'A' && pessoa[ordem[kcont + 1]].nome[lcont] <= 'Z')
+                    pessoa[ordem[kcont + 1]].nome[lcont] += 32;
             }
-            
-            if ((aluno[ordem[kcont]].nome[jcont] > aluno[ordem[kcont + 1]].nome[lcont]) && (aluno[ordem[kcont]].nome[jcont] != '\0' && aluno[ordem[kcont + 1]].nome[lcont] != '\0'))
+
+            if ((pessoa[ordem[kcont]].nome[jcont] > pessoa[ordem[kcont + 1]].nome[lcont]) && (pessoa[ordem[kcont]].nome[jcont] != '\0' && pessoa[ordem[kcont + 1]].nome[lcont] != '\0'))
                 trocou = trocaValores(ordem, kcont);
-            
+
             jcont = 0;
             lcont = 0;
         }
     }
-    for (icont = 0; icont < qtdAlunosCadastrados; icont++)
-        printf("%d- %s", icont + 1, aluno[ordem[icont]].nome);
+    for (icont = 0; icont < qtdPessoasCadastradas; icont++)
+        printf("%d- %s", icont + 1, pessoa[ordem[icont]].nome);
 }
 
-void listarSexo(infoAlunosProfs aluno[], int qtdAlunosCadastrados){
+void listarSexo(infoAlunosProfs pessoa[], int qtdPessoasCadastradas){
     int icont;
-    for (icont = 0; icont < qtdAlunosCadastrados; icont++)
-        printf("%s%s\n", aluno[icont].nome, aluno[icont].sexo);
+    for (icont = 0; icont < qtdPessoasCadastradas; icont++)
+        printf("%s%s\n", pessoa[icont].nome, pessoa[icont].sexo);
 }
 
-void listarNascimento(infoAlunosProfs aluno[], int qtdAlunosCadastrados){
+void listarNascimento(infoAlunosProfs pessoa[], int qtdPessoasCadastradas){
     int icont, jcont;
-    int trocou = TRUE, ordem[qtdAlunosCadastrados];
-    int dia[qtdAlunosCadastrados], mes[qtdAlunosCadastrados], ano[qtdAlunosCadastrados];
-    
-    for (icont = 0; icont < qtdAlunosCadastrados; icont++){
-        dia[icont] = aluno[icont].dataNasc / 1000000; 
-        mes[icont] = (aluno[icont].dataNasc % 1000000) / 10000;
-        ano[icont] = aluno[icont].dataNasc % 10000;
-        
+    int trocou = TRUE, ordem[qtdPessoasCadastradas];
+    int dia[qtdPessoasCadastradas], mes[qtdPessoasCadastradas], ano[qtdPessoasCadastradas];
+
+    for (icont = 0; icont < qtdPessoasCadastradas; icont++){
+        dia[icont] = pessoa[icont].dataNasc / 1000000; 
+        mes[icont] = (pessoa[icont].dataNasc % 1000000) / 10000;
+        ano[icont] = pessoa[icont].dataNasc % 10000;
+
         ordem[icont] = icont;
     }
-    
-    for (icont = 0; icont < qtdAlunosCadastrados - 1 && trocou; icont++){
+
+    for (icont = 0; icont < qtdPessoasCadastradas - 1 && trocou; icont++){
         trocou = FALSE;
-        for (jcont = 0; jcont < qtdAlunosCadastrados - 1 - icont; jcont++){
+        for (jcont = 0; jcont < qtdPessoasCadastradas - 1 - icont; jcont++){
             if (ano[ordem[jcont]] > ano[ordem[jcont + 1]])
                 trocou = trocaValores(ordem, jcont);
-            
+
             else if (ano[ordem[jcont]] == ano[ordem[jcont + 1]]){
                 if (mes[ordem[jcont]] > mes[ordem[jcont + 1]])
                     trocou = trocaValores(ordem, jcont);
-                
+
                 else if (mes[ordem[jcont]] == mes[ordem[jcont + 1]]){
                     if (dia[ordem[jcont]] > dia[ordem[jcont + 1]])
                         trocou = trocaValores(ordem, jcont);
@@ -473,12 +658,52 @@ void listarNascimento(infoAlunosProfs aluno[], int qtdAlunosCadastrados){
             }
         }
     }
-    
-    for (icont = 0; icont < qtdAlunosCadastrados; icont++)
-        printf("%s%d/%d/%d\n\n", aluno[ordem[icont]].nome, dia[ordem[icont]], mes[ordem[icont]], ano[ordem[icont]]);
+
+    for (icont = 0; icont < qtdPessoasCadastradas; icont++)
+        printf("%s%d/%d/%d\n\n", pessoa[ordem[icont]].nome, dia[ordem[icont]], mes[ordem[icont]], ano[ordem[icont]]);
 }
 
-void buscarCadastrado(infoAlunosProfs aluno[], char nomeBusca[], int qtdAlunosCadastrados){
+void cadastrarDisciplina(infoDisciplinas disciplina[], int idxDisciplina){
+
+    printf("Digite o nome da disciplina: ");
+    fgets (disciplina[idxDisciplina].nome, maxCaracPorNome, stdin);
+
+    printf("Digite o código da disciplina: ");
+    scanf("%d", &disciplina[idxDisciplina].codigo);
+    getchar();
+
+    printf("Digite o semestre da disciplina: ");
+    fgets (disciplina[idxDisciplina].semestre, maxCaracSemestre, stdin);
+
+    printf("Digite o nome do professor da disciplina: ");
+    fgets (disciplina[idxDisciplina].professor, maxCaracPorNome, stdin);
+
+    printf("Cadastro Realizado Com Sucesso!\n");
+}
+
+void atualizarCadastroDisciplina(infoDisciplinas disciplina[], int qtdDisplinasCadastradas){
+    int icont, disciplinaAntiga;
+    int idxAtualizar = -1;
+
+    printf("Digite o Código da Disciplina Que Desesjas Atualizar: ");
+    scanf("%d", &disciplinaAntiga);
+    getchar();
+
+    for (icont = 0; icont < qtdDisplinasCadastradas; icont++){
+        if (disciplinaAntiga == disciplina[icont].codigo)
+            idxAtualizar = icont;
+    }
+
+    if (idxAtualizar >= 0){
+        printf("Digite As Novas Informações da Disciplina:\n");
+        cadastrarDisciplina(disciplina, idxAtualizar);
+    }
+    else
+        printf("Código da Disciplina Não Encontrado!\n");
+
+}
+
+void buscarCadastrado(infoAlunosProfs aluno[], infoAlunosProfs professor[], int qtdAlunosCadastrados, int qtdProfsCadastrados, char nomeBusca[]){
 // busca por letras no nome, ou seja, se algum nome tiver 
 // todas as letras que foram digitadas na busca, esse nome é exibido.
     int icont, jcont, kcont, tam;
@@ -489,10 +714,10 @@ void buscarCadastrado(infoAlunosProfs aluno[], char nomeBusca[], int qtdAlunosCa
         printf("Letras insuficientes para busca!\n");
     else {
         printf("Com base na sua busca, esses são os resultados que mais se encaixam:\n");
-        for (icont = 0; icont < qtdAlunosCadastrados; icont++){
+        for (icont = 0; icont < qtdProfsCadastrados || icont < qtdAlunosCadastrados; icont++){
             jcont = 0;
             kcont = 0;
-            while (aluno[icont].nome[kcont] != '\n' && jcont < tam){
+            while (aluno[icont].nome[kcont] != '\n' && jcont < tam && icont < qtdAlunosCadastrados){
                 if (nomeBusca[jcont] != aluno[icont].nome[kcont]){
                     achou = FALSE;
                     kcont++;
@@ -503,20 +728,40 @@ void buscarCadastrado(infoAlunosProfs aluno[], char nomeBusca[], int qtdAlunosCa
                     kcont = 0;
                 }
             }
-            
+
             if (achou)
                 printf("%s", aluno[icont].nome);
+
+            achou = FALSE;
+            jcont = 0;
+            kcont = 0;
+            while (professor[icont].nome[kcont] != '\n' && jcont < tam && icont < qtdProfsCadastrados){
+                if (nomeBusca[jcont] != professor[icont].nome[kcont]){
+                    achou = FALSE;
+                    kcont++;
+                }
+                else {
+                    achou = TRUE;
+                    jcont++;
+                    kcont = 0;
+                }
+            }
+
+            if (achou)
+                printf("%s", professor[icont].nome);
         }
     }
 }
 
-void listarAniversariantes(infoAlunosProfs aluno[], int mesAtual, int qtdAlunosCadastrados){
-    int icont, mesPessoa;
+void listarAniversariantes(infoAlunosProfs aluno[], infoAlunosProfs professor[], int qtdAlunosCadastrados, int qtdProfsCadastrados, int mesAtual){
+    int icont, mesAluno, mesProf;
     printf("Esses são os cadastrados que fazem aniversário no mes %d:\n", mesAtual);
-    for (icont = 0; icont < qtdAlunosCadastrados; icont++){
-        mesPessoa = (aluno[icont].dataNasc % 1000000) / 10000;
-        if (mesPessoa == mesAtual)
+    for (icont = 0; icont < qtdAlunosCadastrados || icont < qtdProfsCadastrados; icont++){
+        mesAluno = (aluno[icont].dataNasc % 1000000) / 10000;
+        mesProf = (professor[icont].dataNasc % 1000000) / 10000;
+        if (mesAluno == mesAtual && icont < qtdAlunosCadastrados)
             printf("- %s", aluno[icont].nome);
+        if (mesProf == mesAtual && icont < qtdProfsCadastrados)
+            printf("- %s", professor[icont].nome);
     }
-    // outro for aq para os professores
 }
