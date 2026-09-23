@@ -5,7 +5,7 @@
 #define maxNomeSexTam 9+1+1 // o nome "masculino" + \n + \0
 #define cpfTam 11
 #define maxAlunosPorDisciplina 5
-#define maxCaracSemestre 8 // ano (4 carac) + '.' + semestre + \n + \0 
+// #define maxCaracSemestre 10 // "primeiro" = 8 carac, ou em num, ano (4 carac) + '.' + semestre + \n + \0 
 #define TRUE 1
 #define FALSE 0
 #define minLetrasBusca 3
@@ -21,7 +21,7 @@ infoAlunosProfs;
 
 typedef struct {
     char nome[maxCaracPorNome];
-    char semestre[maxCaracSemestre];
+    float semestre;
     int codigo;
     int professor;
     int aluno[maxAlunosPorDisciplina];
@@ -49,7 +49,8 @@ void listarNascimento(infoAlunosProfs pessoa[], int qtdPessoasCadastrados);
 int trocaValores(int ordem[], int cont);
 
 
-void cadastrarDisciplina(infoDisciplinas disciplina[], int idxDisciplina, infoAlunosProfs professor[], int qtdProfsCadastrados);
+void cadastrarDisciplina(infoDisciplinas disciplina[], int idxDisciplina, infoAlunosProfs professor[], int qtdProfsCadastrados, int qtdDisciplinasCadastradas);
+int validarCodigoDisciplina(infoDisciplinas disciplina[], int idxDisciplina, int qtdDisciplinasCadastradas);
 void atualizarCadastroDisciplina(infoDisciplinas disciplina[], int qtdDisplinasCadastradas, infoAlunosProfs professor[], int qtdProfsCadastrados);
 int deletarCadastro(int qtdCadastros);
 void inserirAlunoDisciplina(infoAlunosProfs aluno[], int qtdAlunosCadastrados, infoDisciplinas disciplina[], int qtdDisciplinasCadastradas);
@@ -252,8 +253,8 @@ int main(){
                                         break;
                                     }
                                     case 1: {
-                                        if (qtdAlunosCadastrados > 0 && qtdProfsCadastrados > 0){
-                                            cadastrarDisciplina(disciplina, qtdDisciplinasCadastradas, professor, qtdProfsCadastrados);
+                                        if (qtdProfsCadastrados > 0){
+                                            cadastrarDisciplina(disciplina, qtdDisciplinasCadastradas, professor, qtdProfsCadastrados, qtdDisciplinasCadastradas);
                                             qtdDisciplinasCadastradas++;
                                         }
                                         else
@@ -651,39 +652,62 @@ void listarNascimento(infoAlunosProfs pessoa[], int qtdPessoasCadastradas){
         printf("%s%d/%d/%d\n\n", pessoa[ordem[icont]].nome, dia[ordem[icont]], mes[ordem[icont]], ano[ordem[icont]]);
 }
 
-void cadastrarDisciplina(infoDisciplinas disciplina[], int idxDisciplina, infoAlunosProfs professor[], int qtdProfsCadastrados){
-    int icont, numMatricula, achou = FALSE;
+int validarCodigoDisciplina(infoDisciplinas disciplina[], int idxDisciplina, int qtdDisciplinasCadastradas){
+    int icont;
+    int codigoValido = TRUE;
+
+    for (icont = 0; icont < qtdDisciplinasCadastradas; icont++){
+        if (disciplina[idxDisciplina].codigo == disciplina[icont].codigo && icont != idxDisciplina){
+            codigoValido = FALSE;
+            break;
+        }
+    }
+
+    return codigoValido;
+}
+
+void cadastrarDisciplina(infoDisciplinas disciplina[], int idxDisciplina, infoAlunosProfs professor[], int qtdProfsCadastrados, int qtdDisciplinasCadastradas){
+    int icont, numMatricula, cadastroValido = FALSE;
     disciplina[idxDisciplina].totalAlunos = 0;
 
     printf("Digite o nome da disciplina: ");
     fgets (disciplina[idxDisciplina].nome, maxCaracPorNome, stdin);
 
-    printf("Digite o código da disciplina: ");
-    scanf("%d", &disciplina[idxDisciplina].codigo);
-    getchar();
+    while (cadastroValido == FALSE){
+        printf("Digite o código da disciplina: ");
+        scanf("%d", &disciplina[idxDisciplina].codigo);
+        getchar();
+
+        cadastroValido = validarCodigoDisciplina(disciplina, idxDisciplina, qtdDisciplinasCadastradas);
+        if (cadastroValido == FALSE)
+            printf("Erro! Código Já Existente!\n");
+    }
+    cadastroValido = FALSE;
 
     printf("Digite o semestre da disciplina: ");
-    fgets (disciplina[idxDisciplina].semestre, maxCaracSemestre, stdin);
+    scanf("%f", &disciplina[idxDisciplina].semestre);
+    getchar();
 
-    while (achou == FALSE){
+    while (cadastroValido == FALSE){
         printf("Digite o número de mmatrícula do professor para esta disciplina: ");
         scanf("%d", &numMatricula);
         getchar();
+
         for (icont = 0; icont < qtdProfsCadastrados; icont++){
             if (numMatricula == professor[icont].matricula){
                 disciplina[idxDisciplina].professor = icont;
-                achou = TRUE;
+                cadastroValido = TRUE;
                 break;
             }
         }
-        if (achou == FALSE)
+        if (cadastroValido == FALSE)
             printf("Erro! Professor Não Encontrado, Tente Novamente!\n");
     }
 
     printf("Cadastro Realizado Com Sucesso!\n");
 }
 
-void atualizarCadastroDisciplina(infoDisciplinas disciplina[], int qtdDisplinasCadastradas, infoAlunosProfs professor[], int qtdProfsCadastrados){
+void atualizarCadastroDisciplina(infoDisciplinas disciplina[], int qtdDisciplinasCadastradas, infoAlunosProfs professor[], int qtdProfsCadastrados){
     int icont, disciplinaAntiga;
     int idxAtualizar = -1;
 
@@ -691,14 +715,14 @@ void atualizarCadastroDisciplina(infoDisciplinas disciplina[], int qtdDisplinasC
     scanf("%d", &disciplinaAntiga);
     getchar();
 
-    for (icont = 0; icont < qtdDisplinasCadastradas; icont++){
+    for (icont = 0; icont < qtdDisciplinasCadastradas; icont++){
         if (disciplinaAntiga == disciplina[icont].codigo)
             idxAtualizar = icont;
     }
 
     if (idxAtualizar >= 0){
         printf("Digite As Novas Informações da Disciplina:\n");
-        cadastrarDisciplina(disciplina, idxAtualizar, professor, qtdProfsCadastrados);
+        cadastrarDisciplina(disciplina, idxAtualizar, professor, qtdProfsCadastrados, qtdDisciplinasCadastradas);
     }
     else
         printf("Código da Disciplina Não Encontrado!\n");
@@ -764,7 +788,7 @@ void listarDisciplinas(infoDisciplinas disciplina[], int qtdDisciplinasCadastrad
     for (icont = 0; icont < qtdDisciplinasCadastradas; icont++){
         printf("Disciplina: %s", disciplina[icont].nome);
         printf("Código: %d\n", disciplina[icont].codigo);
-        printf("Semestre: %s", disciplina[icont].semestre);
+        printf("Semestre: %.1f\n", disciplina[icont].semestre);
         printf("Professor: %s\n", professor[disciplina[icont].professor].nome);
     }
 }
@@ -786,7 +810,7 @@ void listarUmaDisciplina(infoDisciplinas disciplina[], infoAlunosProfs aluno[], 
     if (idxDisciplina >= 0){
         printf("Disciplina: %s", disciplina[idxDisciplina].nome);
         printf("Código: %d\n", disciplina[idxDisciplina].codigo);
-        printf("Semestre: %s", disciplina[idxDisciplina].semestre);
+        printf("Semestre: %.1f\n", disciplina[idxDisciplina].semestre);
         printf("Professor: %s", professor[disciplina[idxDisciplina].professor].nome);
 
         printf("Alunos: %d\n", disciplina[idxDisciplina].totalAlunos);
