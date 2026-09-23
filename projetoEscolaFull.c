@@ -5,7 +5,6 @@
 #define maxNomeSexTam 9+1+1 // o nome "masculino" + \n + \0
 #define cpfTam 11
 #define maxAlunosPorDisciplina 5
-// #define maxCaracSemestre 10 // "primeiro" = 8 carac, ou em num, ano (4 carac) + '.' + semestre + \n + \0 
 #define TRUE 1
 #define FALSE 0
 #define minLetrasBusca 3
