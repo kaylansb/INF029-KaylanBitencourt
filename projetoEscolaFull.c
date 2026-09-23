@@ -394,68 +394,6 @@ void painelInformacoesDisplinas(){
     printf("7 - Listar Disciplinas Com 40+ Vagas\n");
 }
 
-// int informacaoAlunos(int opcao){
-//     int saida = FALSE;
-//     switch (opcao){
-//         case 0: {
-//             return TRUE;
-//         }
-//         case 1: {
-//             while (saida == FALSE){
-//                 painelCadastro();
-//                 scanf("%d", &opcao);
-//                 getchar();
-//                 saida = infoCadastroAlunos(opcao);
-//             }
-//             saida = FALSE;
-//             break;
-//         }
-//         case 2: {
-//             listarAlunos();
-//             break;
-//         }
-//         case 3: {
-//             listarNomesOrdem();
-//             break;
-//         }
-//         case 4: {
-//             listarSexo();
-//             break;
-//         }
-//         case 5: {
-//             listarNascimento();
-//             break;
-//         }
-//     }
-//     return FALSE;
-// }
-
-// int infoCadastroAlunos(int opcao){
-//     switch (opcao){
-//         case 0: {
-//             return TRUE;
-//         }
-//         case 1: {
-//             cadastrarAluno(qtdAlunosCadastrados);
-//             qtdAlunosCadastrados++;
-//             break;
-//         }
-//         case 2: {
-//             atualizarCadastroAlunos();
-//             break;
-//         }
-//         case 3: {
-//             // pode melhorar ao pedir para o usuario solicitar
-//             // um cadastro especifico para ser deletado
-//             qtdAlunosCadastrados--;
-//             printf("Cadastro Deletado!\n");
-//             break;
-//         }
-//     }
-
-//     return FALSE;
-// }
-
 int validarNascimento(infoAlunosProfs pessoa[], int idxPessoa){
     int dataValida;
     int dia, mes, ano;
