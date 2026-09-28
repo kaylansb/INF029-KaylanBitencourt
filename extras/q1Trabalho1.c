@@ -1,34 +1,17 @@
-#include <stdio.h>
-#define diaTam 3
-#define mesTam 3
-#define anoTam 5
-
-int q1(char data[]);
-void dividirDataEmStrings(char data[], char sDia[], char sMes[], char sAno[]);
-int* converterDataParaInt(char sDia[], char sMes[], char sAno[]);
-int ehAnoBissexto(int intAno);
-int validarCombinacaoMesDia(int intDia, int intMes, int ehBissexto);
-
-int main() {
-    char data[11] = {"29/02/2003\0"};
-    q1(data);
-    return 0;
-}
-
 void dividirDataEmStrings(char data[], char sDia[], char sMes[], char sAno[]){
     int icont, jcont;
     
-    for (icont = 0, jcont = 0; data[icont] != '/' && jcont < diaTam; icont++, jcont++){
+    for (icont = 0, jcont = 0; data[icont] != '/' && jcont < 3; icont++, jcont++){
         sDia[jcont] = data[icont];
     }
     sDia[jcont] = '\0';
     
-    for (icont += 1, jcont = 0; data[icont] != '/' && jcont < mesTam; icont++, jcont++){
+    for (icont += 1, jcont = 0; data[icont] != '/' && jcont < 3; icont++, jcont++){
         sMes[jcont] = data[icont];
     }
     sMes[jcont] = '\0';
     
-    for (icont += 1, jcont = 0; data[icont] != '\0' && jcont < anoTam; icont++, jcont++){
+    for (icont += 1, jcont = 0; data[icont] != '\0' && jcont < 5; icont++, jcont++){
         sAno[jcont] = data[icont];
     }
     sAno[jcont] = '\0';
@@ -123,7 +106,7 @@ int validarCombinacaoMesDia(int intDia, int intMes, int ehBissexto){
 int q1(char data[]){
     int datavalida = 1;
     int *intData, intDia, intMes, intAno, ehBissexto, icont;
-    char sDia[diaTam], sMes[mesTam], sAno[anoTam];
+    char sDia[3], sMes[3], sAno[5];
     
     dividirDataEmStrings(data, sDia, sMes, sAno);
 
@@ -144,12 +127,9 @@ int q1(char data[]){
     else if ((intAno < 1900 && intAno > 99) || (intAno > 2026 || intAno < 0))
         datavalida = 0;
     
-    if (datavalida){
-        printf("DEU CERTO!\ndata: %d/%d/%d", intDia, intMes, intAno);
+    printf("%d/%d/%d\n", intDia, intMes, intAno);
+    if (datavalida)
         return 1;
-    }
-    else {
-        printf("DEU ERRADO!\ndata: %d/%d/%d", intDia, intMes, intAno);
+    else
         return 0;
-    }
 }
