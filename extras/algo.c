@@ -110,8 +110,9 @@ int q1(char data[]){
 
     dividirDataEmStrings(data, sDia, sMes, sAno);
 
-    // mudar essa função convertToInt, para
-a funcao receber uma string e retornar um inteiro (poderia mudar o nome para algo como "numAsciiParaInt")
+    // mudar essa função convertToInt,
+    // para a funcao receber uma string e retornar
+    // um inteiro (poderia mudar o nome para algo como "numAsciiParaInt")
     intData = converterDataParaInt(sDia, sMes, sAno);
     intDia = intData[0];
     intMes = intData[1];
