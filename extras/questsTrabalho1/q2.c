@@ -75,7 +75,7 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
             //calcule a distancia entre as datas
             int diaInicial, mesInicial, anoInicial;
             int diaFinal, mesFinal, anoFinal;
-            int *intData, diasDoMesAnterior, ehBissexto = 0;
+            int *intData, diasDoMesAnterior;
             char sDia[3], sMes[3], sAno[5];
 
             dividirDataEmStrings(datainicial, sDia, sMes, sAno);
