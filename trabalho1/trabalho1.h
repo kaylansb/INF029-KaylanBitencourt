@@ -37,7 +37,7 @@ typedef struct Qtd
     int qtdMeses;
     int qtdAnos;
     int retorno;
-
+ 
 } DiasMesesAnos;
 
 int somar(int x, int y); //função utilizada para testes
