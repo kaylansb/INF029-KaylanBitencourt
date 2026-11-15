@@ -1,9 +1,12 @@
 #include <stdio.h>
 #define lin 5
 #define col 5
+#define qtdPalavras 2
+#define palavraMaxTam 5 + 1
 
 
 void exibirCacaPalavras(char matriz[][col]);
+void ler(char str[]);
 
 int verificarSringEmMatriz(char matriz[lin][col], char str[], int icont, int jcont);
 
@@ -21,7 +24,7 @@ int procurarStringDiagonalAbaixoEsquerda(char matriz[lin][col], char str[], int 
 
 int main(){
     int icont, jcont, achou = 0;  
-    char str[] = "efkr";
+    char str[palavraMaxTam] = {'\0'};
     char matriz[lin][col] = {
     {'e', 'a', 'b', 'c', 'd'},
     {'l', 'f', 'g', 'h', 'i'},
@@ -29,11 +32,12 @@ int main(){
     {'o', 'p', 'q', 'r', 's'},
     {'n', 'u', 'v', 'w', 'x'}, };
     
-    while (achou < 2){
+    while (achou < qtdPalavras){
         exibirCacaPalavras(matriz);
         printf("Digite uma palavra do Caca Palavras:\n");
-        for (icont = 0; icont < lin && !achou; icont++){
-            for (jcont = 0; jcont < col && !achou; jcont++){
+        ler(str);
+        for (icont = 0; icont < lin; icont++){
+            for (jcont = 0; jcont < col; jcont++){
                 if (matriz[icont][jcont] == str[0]){
                     achou += verificarSringEmMatriz(matriz, str, icont, jcont);
                 }
@@ -47,19 +51,31 @@ int main(){
 
 void exibirCacaPalavras(char matriz[][col]){
     int icont, jcont;
-
+    
     for (icont = 0; icont < lin; icont++){
         for (jcont = 0; jcont < col; jcont++){
-            printf("%c\t");
+            printf("%c\t", matriz[icont][jcont]);
         }
         printf("\n");
     }
     printf("\n");
 }
 
+void ler(char str[]){
+    int i, ch;
+
+    i = 0;
+    while ((ch = getchar()) != '\n'){
+        if (i < palavraMaxTam)
+            str[i] = ch;
+        i++;
+    }
+    str[5] = '\0';
+}
+
 int verificarSringEmMatriz(char matriz[lin][col], char str[], int icont, int jcont){
     int existe = 0;
-
+    
     existe = procurarStringAcima(matriz, str, icont-1, jcont, 1);
     if (!existe)
         existe = procurarStringAbaixo(matriz, str, icont+1, jcont, 1);
