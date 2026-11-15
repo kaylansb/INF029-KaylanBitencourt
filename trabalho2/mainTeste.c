@@ -18,18 +18,18 @@ void testeListaEncadeada();
 int main()
 {
     inicializar();
-    testeInserirSemNada();
+    //testeInserirSemNada();
     testeCriarEstrutura();
-    testeInserirComEstrutura();
-    testeExcluir();
-    testeExcluirNumeroEspecifico();
-    testeListar();
-    testeRetornarTodosNumeros();
-    testeMudarTamanhoEstrutura();
-    testeListaEncadeada();
+    // testeInserirComEstrutura();
+    // testeExcluir();
+    // testeExcluirNumeroEspecifico();
+    // testeListar();
+    // testeRetornarTodosNumeros();
+    // testeMudarTamanhoEstrutura();
+    // testeListaEncadeada();
     finalizar();
 }
-int ligado = 0;
+int ligado = 1;
 void show_log(char *str)
 {
     if (ligado)

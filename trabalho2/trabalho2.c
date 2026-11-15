@@ -4,7 +4,15 @@
 
 #include "trabalho2.h"
 
-int vetorPrincipal[TAM];
+typedef struct {
+    int *estruturaAux;
+    int tamEstruturaAux;
+    int posOcupadas;
+}
+estruturaPrincipal;
+
+
+estruturaPrincipal vetorPrincipal[TAM] = {0};
 
 /*
 Objetivo: criar estrutura auxiliar na posição 'posicao'.
@@ -19,19 +27,33 @@ Rertono (int)
 */
 int criarEstruturaAuxiliar(int posicao, int tamanho)
 {
-
     int retorno = 0;
-    // a posicao pode já existir estrutura auxiliar
-    retorno = JA_TEM_ESTRUTURA_AUXILIAR;
+    
     // se posição é um valor válido {entre 1 e 10}
-    retorno = POSICAO_INVALIDA;
-    // o tamanho ser muito grande
-    retorno = SEM_ESPACO_DE_MEMORIA;
-    // o tamanho nao pode ser menor que 1
-    retorno = TAMANHO_INVALIDO;
-    // deu tudo certo, crie
-    retorno = SUCESSO;
+    if (posicao < 1 || posicao > 10)
+        retorno = POSICAO_INVALIDA;
 
+    // o tamanho nao pode ser menor que 1
+    else if (tamanho < 1)
+        retorno = TAMANHO_INVALIDO;
+
+    // a posicao pode já existir estrutura auxiliar
+    else if (vetorPrincipal[posicao - 1].estruturaAux != NULL)
+        retorno = JA_TEM_ESTRUTURA_AUXILIAR;
+    
+    else {
+        vetorPrincipal[posicao - 1].estruturaAux = malloc(tamanho*sizeof(int));
+        // o tamanho ser muito grande
+        if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
+            retorno = SEM_ESPACO_DE_MEMORIA;
+
+        // deu tudo certo, crie
+        else {
+            vetorPrincipal[posicao - 1].tamEstruturaAux = tamanho;
+            retorno = SUCESSO;
+        }
+    }
+    
     return retorno;
 }
 
@@ -51,6 +73,15 @@ int inserirNumeroEmEstrutura(int posicao, int valor)
     int temEspaco = 0;
     int posicao_invalida = 0;
 
+    if (posicao < 1 || posicao > 10)
+        posicao_invalida = 1;
+    else if (vetorPrincipal[posicao - 1].estruturaAux != NULL)
+        existeEstruturaAuxiliar = 1;
+
+    if (vetorPrincipal[posicao - 1].posOcupadas < vetorPrincipal[posicao - 1].tamEstruturaAux){
+        temEspaco = 1;
+        vetorPrincipal[posicao - 1].estruturaAux[vetorPrincipal[posicao - 1].posOcupadas] = valor;
+    }
     if (posicao_invalida)
         retorno = POSICAO_INVALIDA;
     else
@@ -262,7 +293,7 @@ void destruirListaEncadeadaComCabecote(No **inicio)
 Objetivo: inicializa o programa. deve ser chamado ao inicio do programa 
 
 */
-
+// ??
 void inicializar()
 {
 }
@@ -275,4 +306,7 @@ para poder liberar todos os espaços de memória das estruturas auxiliares.
 
 void finalizar()
 {
+    int i;
+    for (i = 0; i < TAM; i++)
+        free(vetorPrincipal[i].estruturaAux);
 }
