@@ -108,6 +108,16 @@ Rertono (int)
 int excluirNumeroDoFinaldaEstrutura(int posicao)
 {
     int retorno = SUCESSO;
+    
+    if (posicao < 1 || posicao > 10)
+        retorno = POSICAO_INVALIDA;
+    else if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
+        retorno = SEM_ESTRUTURA_AUXILIAR;
+    else if (vetorPrincipal[posicao - 1].posOcupadas == 0)
+        retorno = ESTRUTURA_AUXILIAR_VAZIA;
+    else
+        vetorPrincipal[posicao - 1].posOcupadas--;
+    
     return retorno;
 }
 
@@ -124,9 +134,35 @@ Rertono (int)
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 
 */
+// pensar em um nome melhor dps
+void deletar(int estruturaAux[], int tamEstruturaAux, int posicaoDeletada){
+    int i;
+    for (i = posicaoDeletada + 1; i < tamEstruturaAux; i++)
+        estruturaAux[i - 1] = estruturaAux[i];
+}
+
 int excluirNumeroEspecificoDeEstrutura(int posicao, int valor)
 {
     int retorno = SUCESSO;
+    int i;
+    
+    if (posicao < 1 || posicao > 10)
+        retorno = POSICAO_INVALIDA;
+    else if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
+        retorno = SEM_ESTRUTURA_AUXILIAR;
+    else if (vetorPrincipal[posicao - 1].posOcupadas == 0)
+        retorno = ESTRUTURA_AUXILIAR_VAZIA;
+    else {
+        for (i = 0; i < vetorPrincipal[posicao - 1].tamEstruturaAux; i++){
+            if (valor == vetorPrincipal[posicao - 1].estruturaAux[i])
+                break;
+        }
+        if (i == vetorPrincipal[posicao - 1].tamEstruturaAux)
+            retorno = NUMERO_INEXISTENTE;
+        else {
+
+        }
+    }
     return retorno;
 }
 
