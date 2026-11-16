@@ -69,39 +69,25 @@ CONSTANTES
 int inserirNumeroEmEstrutura(int posicao, int valor)
 {
     int retorno = 0;
-    int existeEstruturaAuxiliar = 0;
-    int temEspaco = 0;
-    int posicao_invalida = 0;
-
+    
     if (posicao < 1 || posicao > 10)
-        posicao_invalida = 1;
-    else if (vetorPrincipal[posicao - 1].estruturaAux != NULL)
-        existeEstruturaAuxiliar = 1;
-
-    if (vetorPrincipal[posicao - 1].posOcupadas < vetorPrincipal[posicao - 1].tamEstruturaAux){
-        temEspaco = 1;
-        vetorPrincipal[posicao - 1].estruturaAux[vetorPrincipal[posicao - 1].posOcupadas] = valor;
-    }
-    if (posicao_invalida)
         retorno = POSICAO_INVALIDA;
-    else
-    {
+    else {
         // testar se existe a estrutura auxiliar
-        if (existeEstruturaAuxiliar)
-        {
-            if (temEspaco)
-            {
-                //insere
-                retorno = SUCESSO;
-            }
-            else
-            {
+        if (vetorPrincipal[posicao - 1].estruturaAux == NULL){
+            retorno = SEM_ESTRUTURA_AUXILIAR;
+        }
+        else {
+            if (vetorPrincipal[posicao - 1].posOcupadas >= vetorPrincipal[posicao - 1].tamEstruturaAux){
                 retorno = SEM_ESPACO;
             }
-        }
-        else
-        {
-            retorno = SEM_ESTRUTURA_AUXILIAR;
+
+            else {
+                //insere
+                retorno = SUCESSO;
+                vetorPrincipal[posicao - 1].estruturaAux[vetorPrincipal[posicao - 1].posOcupadas] = valor;
+                vetorPrincipal[posicao - 1].posOcupadas++;
+            }
         }
     }
 
