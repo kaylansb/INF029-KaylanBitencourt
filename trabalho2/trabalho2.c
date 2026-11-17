@@ -134,7 +134,7 @@ Rertono (int)
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 
 */
-// pensar em um nome melhor dps
+// pensar em um nome melhor dps (sobrescreverUmValorEmVetor?)
 void deletar(int estruturaAux[], int tamEstruturaAux, int posicaoDeletada){
     int i;
     for (i = posicaoDeletada + 1; i < tamEstruturaAux; i++)
