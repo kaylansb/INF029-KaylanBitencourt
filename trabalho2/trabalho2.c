@@ -28,7 +28,7 @@ Rertono (int)
 int criarEstruturaAuxiliar(int posicao, int tamanho)
 {
     int retorno = 0;
-    
+
     // se posição é um valor válido {entre 1 e 10}
     if (posicao < 1 || posicao > 10)
         retorno = POSICAO_INVALIDA;
@@ -53,6 +53,14 @@ int criarEstruturaAuxiliar(int posicao, int tamanho)
             retorno = SUCESSO;
         }
     }
+
+    for (int j = 0; j < TAM; j++){
+        printf("Estrutura Auxiliar %d: [ ", j+1);
+        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
+            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
+        }
+        printf("]\n");
+    }
     
     return retorno;
 }
@@ -69,7 +77,7 @@ CONSTANTES
 int inserirNumeroEmEstrutura(int posicao, int valor)
 {
     int retorno = 0;
-    
+
     if (posicao < 1 || posicao > 10)
         retorno = POSICAO_INVALIDA;
     else {
@@ -91,6 +99,14 @@ int inserirNumeroEmEstrutura(int posicao, int valor)
         }
     }
 
+    for (int j = 0; j < TAM; j++){
+        printf("Estrutura Auxiliar %d: [ ", j+1);
+        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
+            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
+        }
+        printf("]\n");
+    }
+
     return retorno;
 }
 
@@ -108,7 +124,7 @@ Rertono (int)
 int excluirNumeroDoFinaldaEstrutura(int posicao)
 {
     int retorno = SUCESSO;
-    
+
     if (posicao < 1 || posicao > 10)
         retorno = POSICAO_INVALIDA;
     else if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
@@ -118,6 +134,14 @@ int excluirNumeroDoFinaldaEstrutura(int posicao)
     else
         vetorPrincipal[posicao - 1].posOcupadas--;
     
+    for (int j = 0; j < TAM; j++){
+        printf("Estrutura Auxiliar %d: [ ", j+1);
+        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
+            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
+        }
+        printf("]\n");
+    }
+
     return retorno;
 }
 
@@ -145,7 +169,7 @@ int excluirNumeroEspecificoDeEstrutura(int posicao, int valor)
 {
     int retorno = SUCESSO;
     int i;
-    
+
     if (posicao < 1 || posicao > 10)
         retorno = POSICAO_INVALIDA;
     else if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
@@ -164,6 +188,15 @@ int excluirNumeroEspecificoDeEstrutura(int posicao, int valor)
             vetorPrincipal[posicao - 1].posOcupadas--;
         }
     }
+
+    for (int j = 0; j < TAM; j++){
+        printf("Estrutura Auxiliar %d: [ ", j+1);
+        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
+            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
+        }
+        printf("]\n");
+    }
+
     return retorno;
 }
 
@@ -191,8 +224,27 @@ Retorno (int)
 */
 int getDadosEstruturaAuxiliar(int posicao, int vetorAux[])
 {
-
     int retorno = 0;
+    int i;
+
+    if (posicao < 1 || posicao > 10)
+        retorno = POSICAO_INVALIDA;
+    else if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
+        retorno = SEM_ESTRUTURA_AUXILIAR;
+    else {
+        for (i = 0; i < vetorPrincipal[posicao - 1].tamEstruturaAux; i++)
+            vetorAux[i] = vetorPrincipal[posicao - 1].estruturaAux[i];
+        
+        retorno = SUCESSO;
+    }
+
+    // for (int j = 0; j < TAM; j++){
+    //     printf("Estrutura Auxiliar %d: [ ", j+1);
+    //     for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
+    //         printf("%d ", vetorPrincipal[j].estruturaAux[k]);
+    //     }
+    //     printf("]\n");
+    // }
 
     return retorno;
 }
@@ -206,11 +258,38 @@ Rertono (int)
     SEM_ESTRUTURA_AUXILIAR - Não tem estrutura auxiliar
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 */
+
+void insertionSort(int posicao){
+    int i, j, key;
+
+    for (i = 1; i < vetorPrincipal[posicao - 1].tamEstruturaAux; i++){
+        key = vetorPrincipal[posicao - 1].estruturaAux[i];
+        j = i - 1;
+
+        while (j >= 0 && key < vetorPrincipal[posicao - 1].estruturaAux[j]){
+            vetorPrincipal[posicao - 1].estruturaAux[j + 1] = vetorPrincipal[posicao - 1].estruturaAux[j];
+            j--;
+        }
+
+        vetorPrincipal[posicao - 1].estruturaAux[j + 1] = key;
+    }
+}
+
 int getDadosOrdenadosEstruturaAuxiliar(int posicao, int vetorAux[])
 {
-
     int retorno = 0;
+    int i;
 
+    if (posicao < 1 || posicao > 10)
+        retorno = POSICAO_INVALIDA;
+    else if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
+        retorno = SEM_ESTRUTURA_AUXILIAR;
+    else {
+        insertionSort(posicao);
+        for (i = 0; i < vetorPrincipal[posicao - 1].tamEstruturaAux; i++)
+            vetorAux[i] = vetorPrincipal[posicao - 1].estruturaAux[i];
+        retorno = SUCESSO;
+    }
     
     return retorno;
 }
