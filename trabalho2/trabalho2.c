@@ -140,7 +140,7 @@ void deletar(int estruturaAux[], int tamEstruturaAux, int posicaoDeletada){
     for (i = posicaoDeletada + 1; i < tamEstruturaAux; i++)
         estruturaAux[i - 1] = estruturaAux[i];
 }
-
+// 3 2 4 6
 int excluirNumeroEspecificoDeEstrutura(int posicao, int valor)
 {
     int retorno = SUCESSO;
@@ -160,7 +160,8 @@ int excluirNumeroEspecificoDeEstrutura(int posicao, int valor)
         if (i == vetorPrincipal[posicao - 1].tamEstruturaAux)
             retorno = NUMERO_INEXISTENTE;
         else {
-
+            deletar(vetorPrincipal[posicao - 1].estruturaAux, vetorPrincipal[posicao - 1].tamEstruturaAux, i);
+            vetorPrincipal[posicao - 1].posOcupadas--;
         }
     }
     return retorno;
