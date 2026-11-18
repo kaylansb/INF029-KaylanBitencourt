@@ -260,10 +260,10 @@ Rertono (int)
 */
 // OBS: eu pensei em fazer isso pegando os dados da estrutura, ordenando eles e dps jogar no vetorAux
 // mas o objetivo quer q pegue os dados, jogue no vetor primeiro e dps ordene dentro do vetor
-void insertionSort(int vetor[], int posicao){
+void insertionSort(int vetor[], int vetTam){
     int i, j, key;
 
-    for (i = 1; i < vetorPrincipal[posicao - 1].posOcupadas; i++){
+    for (i = 1; i < vetTam; i++){
         key = vetor[i];
         j = i - 1;
 
@@ -279,20 +279,11 @@ void insertionSort(int vetor[], int posicao){
 int getDadosOrdenadosEstruturaAuxiliar(int posicao, int vetorAux[])
 {
     int retorno = 0;
-    int i;
 
-    if (posicao < 1 || posicao > 10)
-        retorno = POSICAO_INVALIDA;
-    else if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
-        retorno = SEM_ESTRUTURA_AUXILIAR;
-    else {
-        for (i = 0; i < vetorPrincipal[posicao - 1].posOcupadas; i++)
-            vetorAux[i] = vetorPrincipal[posicao - 1].estruturaAux[i];
-        
-        insertionSort(vetorAux, posicao);
-        retorno = SUCESSO;
-    }
-
+    retorno = getDadosEstruturaAuxiliar(posicao, vetorAux);
+    if (retorno == SUCESSO)
+        insertionSort(vetorAux, vetorPrincipal[posicao - 1].posOcupadas);
+    
     for (int j = 0; j < TAM; j++){
         printf("Estrutura Auxiliar %d: [ ", j+1);
         for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
@@ -314,8 +305,24 @@ Rertono (int)
 */
 int getDadosDeTodasEstruturasAuxiliares(int vetorAux[])
 {
+    int retorno = TODAS_ESTRUTURAS_AUXILIARES_VAZIAS;
+    int i, j, k;
 
-    int retorno = 0;
+    for (i = 0, k = 0; i < TAM; i++){
+        for (j = 0; j < vetorPrincipal[i].posOcupadas; j++, k++){
+            retorno = SUCESSO;
+            vetorAux[k] = vetorPrincipal[i].estruturaAux[j];
+        }
+    }
+
+    for (int j = 0; j < TAM; j++){
+        printf("Estrutura Auxiliar %d: [ ", j+1);
+        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
+            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
+        }
+        printf("]\n");
+    }
+
     return retorno;
 }
 
@@ -329,8 +336,27 @@ Rertono (int)
 */
 int getDadosOrdenadosDeTodasEstruturasAuxiliares(int vetorAux[])
 {
+    int retorno = TODAS_ESTRUTURAS_AUXILIARES_VAZIAS;
+    int i, j, k;
 
-    int retorno = 0;
+    for (i = 0, k = 0; i < TAM; i++){
+        for (j = 0; j < vetorPrincipal[i].posOcupadas; j++, k++){
+            retorno = SUCESSO;
+            vetorAux[k] = vetorPrincipal[i].estruturaAux[j];
+        }
+    }
+
+    if (retorno == SUCESSO)
+        insertionSort(vetorAux, k);
+
+    for (int j = 0; j < TAM; j++){
+        printf("Estrutura Auxiliar %d: [ ", j+1);
+        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
+            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
+        }
+        printf("]\n");
+    }
+
     return retorno;
 }
 
@@ -347,8 +373,24 @@ Rertono (int)
 */
 int modificarTamanhoEstruturaAuxiliar(int posicao, int novoTamanho)
 {
-
     int retorno = 0;
+
+    if (posicao < 1 || posicao > 10)
+        retorno = POSICAO_INVALIDA;
+    else if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
+        retorno = SEM_ESTRUTURA_AUXILIAR;
+    else if (novoTamanho < 1)
+        retorno = NOVO_TAMANHO_INVALIDO;
+    else {
+        int *temp = realloc(vetorPrincipal[posicao - 1].estruturaAux, novoTamanho*sizeof(int));
+        if (temp == NULL)
+            retorno = SEM_ESPACO_DE_MEMORIA;
+        else { // mudar o tamanho da estrutura e as posicoes ocupadas
+            vetorPrincipal[posicao - 1].estruturaAux = temp;
+            retorno = SUCESSO;
+        }
+    }
+
     return retorno;
 }
 
@@ -363,8 +405,16 @@ Retorno (int)
 */
 int getQuantidadeElementosEstruturaAuxiliar(int posicao)
 {
-
     int retorno = 0;
+    
+    if (posicao < 1 || posicao > 10)
+        retorno = POSICAO_INVALIDA;
+    else if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
+        retorno = SEM_ESTRUTURA_AUXILIAR;
+    else if (vetorPrincipal[posicao - 1].posOcupadas == 0)
+        retorno = ESTRUTURA_AUXILIAR_VAZIA;
+    else
+        retorno = vetorPrincipal[posicao - 1].posOcupadas;
 
     return retorno;
 }
