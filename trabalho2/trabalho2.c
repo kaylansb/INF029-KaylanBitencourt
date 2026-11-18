@@ -232,19 +232,19 @@ int getDadosEstruturaAuxiliar(int posicao, int vetorAux[])
     else if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
         retorno = SEM_ESTRUTURA_AUXILIAR;
     else {
-        for (i = 0; i < vetorPrincipal[posicao - 1].tamEstruturaAux; i++)
+        for (i = 0; i < vetorPrincipal[posicao - 1].posOcupadas; i++)
             vetorAux[i] = vetorPrincipal[posicao - 1].estruturaAux[i];
         
         retorno = SUCESSO;
     }
 
-    // for (int j = 0; j < TAM; j++){
-    //     printf("Estrutura Auxiliar %d: [ ", j+1);
-    //     for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
-    //         printf("%d ", vetorPrincipal[j].estruturaAux[k]);
-    //     }
-    //     printf("]\n");
-    // }
+    for (int j = 0; j < TAM; j++){
+        printf("Estrutura Auxiliar %d: [ ", j+1);
+        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
+            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
+        }
+        printf("]\n");
+    }
 
     return retorno;
 }
@@ -258,20 +258,21 @@ Rertono (int)
     SEM_ESTRUTURA_AUXILIAR - Não tem estrutura auxiliar
     POSICAO_INVALIDA - Posição inválida para estrutura auxiliar
 */
-
-void insertionSort(int posicao){
+// OBS: eu pensei em fazer isso pegando os dados da estrutura, ordenando eles e dps jogar no vetorAux
+// mas o objetivo quer q pegue os dados, jogue no vetor primeiro e dps ordene dentro do vetor
+void insertionSort(int vetor[], int posicao){
     int i, j, key;
 
-    for (i = 1; i < vetorPrincipal[posicao - 1].tamEstruturaAux; i++){
-        key = vetorPrincipal[posicao - 1].estruturaAux[i];
+    for (i = 1; i < vetorPrincipal[posicao - 1].posOcupadas; i++){
+        key = vetor[i];
         j = i - 1;
 
-        while (j >= 0 && key < vetorPrincipal[posicao - 1].estruturaAux[j]){
-            vetorPrincipal[posicao - 1].estruturaAux[j + 1] = vetorPrincipal[posicao - 1].estruturaAux[j];
+        while (j >= 0 && key < vetor[j]){
+            vetor[j + 1] = vetor[j];
             j--;
         }
 
-        vetorPrincipal[posicao - 1].estruturaAux[j + 1] = key;
+        vetor[j + 1] = key;
     }
 }
 
@@ -285,12 +286,21 @@ int getDadosOrdenadosEstruturaAuxiliar(int posicao, int vetorAux[])
     else if (vetorPrincipal[posicao - 1].estruturaAux == NULL)
         retorno = SEM_ESTRUTURA_AUXILIAR;
     else {
-        insertionSort(posicao);
-        for (i = 0; i < vetorPrincipal[posicao - 1].tamEstruturaAux; i++)
+        for (i = 0; i < vetorPrincipal[posicao - 1].posOcupadas; i++)
             vetorAux[i] = vetorPrincipal[posicao - 1].estruturaAux[i];
+        
+        insertionSort(vetorAux, posicao);
         retorno = SUCESSO;
     }
-    
+
+    for (int j = 0; j < TAM; j++){
+        printf("Estrutura Auxiliar %d: [ ", j+1);
+        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
+            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
+        }
+        printf("]\n");
+    }
+
     return retorno;
 }
 
