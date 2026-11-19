@@ -371,6 +371,7 @@ Rertono (int)
     NOVO_TAMANHO_INVALIDO - novo tamanho não pode ser negativo
     SEM_ESPACO_DE_MEMORIA - erro na alocação do novo valor
 */
+// verificar novo tamanho
 int modificarTamanhoEstruturaAuxiliar(int posicao, int novoTamanho)
 {
     int retorno = 0;
@@ -385,7 +386,11 @@ int modificarTamanhoEstruturaAuxiliar(int posicao, int novoTamanho)
         int *temp = realloc(vetorPrincipal[posicao - 1].estruturaAux, novoTamanho*sizeof(int));
         if (temp == NULL)
             retorno = SEM_ESPACO_DE_MEMORIA;
-        else { // mudar o tamanho da estrutura e as posicoes ocupadas
+        else {
+            if (vetorPrincipal[posicao - 1].posOcupadas > novoTamanho)
+                vetorPrincipal[posicao - 1].posOcupadas = novoTamanho;
+
+            vetorPrincipal[posicao - 1].tamEstruturaAux = novoTamanho;
             vetorPrincipal[posicao - 1].estruturaAux = temp;
             retorno = SUCESSO;
         }
