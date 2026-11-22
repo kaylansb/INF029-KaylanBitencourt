@@ -375,6 +375,7 @@ Rertono (int)
 int modificarTamanhoEstruturaAuxiliar(int posicao, int novoTamanho)
 {
     int retorno = 0;
+    novoTamanho = (vetorPrincipal[posicao - 1].tamEstruturaAux + novoTamanho);
 
     if (posicao < 1 || posicao > 10)
         retorno = POSICAO_INVALIDA;
