@@ -54,14 +54,6 @@ int criarEstruturaAuxiliar(int posicao, int tamanho)
         }
     }
 
-    for (int j = 0; j < TAM; j++){
-        printf("Estrutura Auxiliar %d: [ ", j+1);
-        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
-            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
-        }
-        printf("]\n");
-    }
-    
     return retorno;
 }
 
@@ -99,14 +91,6 @@ int inserirNumeroEmEstrutura(int posicao, int valor)
         }
     }
 
-    for (int j = 0; j < TAM; j++){
-        printf("Estrutura Auxiliar %d: [ ", j+1);
-        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
-            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
-        }
-        printf("]\n");
-    }
-
     return retorno;
 }
 
@@ -134,14 +118,6 @@ int excluirNumeroDoFinaldaEstrutura(int posicao)
     else
         vetorPrincipal[posicao - 1].posOcupadas--;
     
-    for (int j = 0; j < TAM; j++){
-        printf("Estrutura Auxiliar %d: [ ", j+1);
-        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
-            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
-        }
-        printf("]\n");
-    }
-
     return retorno;
 }
 
@@ -189,14 +165,6 @@ int excluirNumeroEspecificoDeEstrutura(int posicao, int valor)
         }
     }
 
-    for (int j = 0; j < TAM; j++){
-        printf("Estrutura Auxiliar %d: [ ", j+1);
-        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
-            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
-        }
-        printf("]\n");
-    }
-
     return retorno;
 }
 
@@ -238,14 +206,6 @@ int getDadosEstruturaAuxiliar(int posicao, int vetorAux[])
         retorno = SUCESSO;
     }
 
-    for (int j = 0; j < TAM; j++){
-        printf("Estrutura Auxiliar %d: [ ", j+1);
-        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
-            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
-        }
-        printf("]\n");
-    }
-
     return retorno;
 }
 
@@ -284,14 +244,6 @@ int getDadosOrdenadosEstruturaAuxiliar(int posicao, int vetorAux[])
     if (retorno == SUCESSO)
         insertionSort(vetorAux, vetorPrincipal[posicao - 1].posOcupadas);
     
-    for (int j = 0; j < TAM; j++){
-        printf("Estrutura Auxiliar %d: [ ", j+1);
-        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
-            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
-        }
-        printf("]\n");
-    }
-
     return retorno;
 }
 
@@ -313,14 +265,6 @@ int getDadosDeTodasEstruturasAuxiliares(int vetorAux[])
             retorno = SUCESSO;
             vetorAux[k] = vetorPrincipal[i].estruturaAux[j];
         }
-    }
-
-    for (int j = 0; j < TAM; j++){
-        printf("Estrutura Auxiliar %d: [ ", j+1);
-        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
-            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
-        }
-        printf("]\n");
     }
 
     return retorno;
@@ -348,14 +292,6 @@ int getDadosOrdenadosDeTodasEstruturasAuxiliares(int vetorAux[])
 
     if (retorno == SUCESSO)
         insertionSort(vetorAux, k);
-
-    for (int j = 0; j < TAM; j++){
-        printf("Estrutura Auxiliar %d: [ ", j+1);
-        for (int k = 0; k < vetorPrincipal[j].tamEstruturaAux; k++){
-            printf("%d ", vetorPrincipal[j].estruturaAux[k]);
-        }
-        printf("]\n");
-    }
 
     return retorno;
 }
@@ -432,10 +368,59 @@ Retorno (No*)
     NULL, caso não tenha nenhum número nas listas
     No*, ponteiro para o início da lista com cabeçote
 */
+
+int getQuantidadeTodosElementosEstruturasAuxiliares(){
+    int i, qtdPorChamada, totalElementos = 0;
+
+    for (i = 0; i < TAM; i++){
+        qtdPorChamada = getQuantidadeElementosEstruturaAuxiliar(i+1);
+        if (qtdPorChamada > 0)
+            totalElementos += qtdPorChamada;
+    }
+
+    return totalElementos;
+}
+
+int inserirNoFimDaLista(No *cabeca, int valor){
+    No *novo = malloc(sizeof(No));
+    
+    if (novo == NULL){
+        printf("Erro ao alocar memória.\n");
+        return 1;
+    }
+    else {
+        novo->conteudo = valor;
+        novo->prox = NULL;
+        
+        while (cabeca->prox){
+            cabeca = cabeca->prox;
+        }
+        cabeca->prox = novo;
+    }
+
+    return 0;
+}
+
 No *montarListaEncadeadaComCabecote()
 {
+    No *retorno;
+    int i, erroAlocacao = 0, qtdElementos = getQuantidadeTodosElementosEstruturasAuxiliares();
+    
+    if (qtdElementos == 0)
+        retorno = NULL;
+    else {
+        int valoresEstruturas[qtdElementos];
+        No *cabeca = malloc(sizeof(No));
+        cabeca->prox = NULL;
 
-    return NULL;
+        getDadosDeTodasEstruturasAuxiliares(valoresEstruturas);
+        for (i = 0; i < qtdElementos && !erroAlocacao; i++)
+            erroAlocacao = inserirNoFimDaLista(cabeca, valoresEstruturas[i]);
+        
+        retorno = cabeca;
+    }
+
+    return retorno;
 }
 
 /*
@@ -444,6 +429,13 @@ Retorno void
 */
 void getDadosListaEncadeadaComCabecote(No *inicio, int vetorAux[])
 {
+    int i = 0;
+    inicio = inicio->prox;
+    while (inicio){
+        vetorAux[i] = inicio->conteudo;
+        inicio = inicio->prox;
+        i++;
+    }
 }
 
 /*
@@ -455,6 +447,12 @@ Retorno
 */
 void destruirListaEncadeadaComCabecote(No **inicio)
 {
+    No *aux;
+    while (*inicio){
+        aux = *inicio;
+        *inicio = (*inicio)->prox;
+        free(aux);
+    }
 }
 
 /*
