@@ -14,9 +14,12 @@ void exibirMenu();
 int inserirInicioLista(amarras *cabeca, int valor);
 int inserirMeioLista(amarras *cabeca, int valor, int anteriorRef);
 int inserirFimLista(amarras *cabeca, int valor);
+int inserirOrdenado(amarras *cabeca, int valor);
 int removerAsAmarrasInicioLista(amarras *cabeca);
 int removerAsAmarrasMeioLista(amarras *cabeca, int anteriorRef);
 int removerAsAmarrasFinalLista(amarras *cabeca);
+int removerAsAmarrasOrdenado(amarras *cabeca);
+void selectionSortDasAmarras(amarras *cabeca);
 void imprimirLista(amarras *cabeca);
 void iWantToBreakFree(amarras **lista);
 
@@ -53,24 +56,38 @@ int main(){
                 inserirFimLista(cabeca, valor);
             break;
 
-            case 4: 
-                removerAsAmarrasInicioLista(cabeca);
+            case 4:
+                printf("Digite um valor para inserir na lista: ");
+                scanf("%d", &valor);
+                inserirOrdenado(cabeca, valor);
             break;
 
             case 5: 
+                removerAsAmarrasInicioLista(cabeca);
+            break;
+
+            case 6: 
                 printf("Digite um valor para ser removido: ");
                 scanf("%d", &valorRef);
                 removerAsAmarrasMeioLista(cabeca, valorRef);
             break;
 
-            case 6:
+            case 7:
                 removerAsAmarrasFinalLista(cabeca);
+            break;
+
+            case 8:
+                removerAsAmarrasOrdenado(cabeca);
+            break;
+
+            case 9:
+                selectionSortDasAmarras(cabeca);
             break;
         
             default: printf("Opção inválida.\n");
         }
 
-        printf("Olha como está a lista encabeçada:\n");
+        printf("Olha como ficou a lista encabeçada:\n");
         imprimirLista(cabeca);
     }
 
@@ -85,9 +102,12 @@ void exibirMenu(){
     printf("1. Inserir no inicio\n");
     printf("2. Inserir no meio\n");
     printf("3. Inserir no final\n");
-    printf("4. Remover do inicio\n");
-    printf("5. Remover do  meio\n");
-    printf("6. Remover do final\n");
+    printf("4. Inserir ordenado\n");
+    printf("5. Remover do inicio\n");
+    printf("6. Remover do  meio\n");
+    printf("7. Remover do final\n");
+    printf("8. Remover ordenado\n");
+    printf("9. Ordenar as amarras\n");
     printf("---------------------------\n");
     printf("Digite sua escolha: ");
 }
@@ -147,6 +167,21 @@ int inserirFimLista(amarras *cabeca, int valor){
     }
 }
 
+int inserirOrdenado(amarras *cabeca, int valor){
+    amarras *novo = malloc(sizeof(amarras));
+
+    if (novo == NULL)
+        return ERRO_DE_MEMORIA;
+    else {
+        novo->valor = valor;
+        while (cabeca->prox != NULL && cabeca->prox->valor < valor){
+            cabeca = cabeca->prox;
+        }
+        novo->prox = cabeca->prox;
+        cabeca->prox = novo;
+    }
+}
+
 int removerAsAmarrasInicioLista(amarras *cabeca){
     amarras *aux;
 
@@ -193,6 +228,52 @@ int removerAsAmarrasFinalLista(amarras *cabeca){
         free(aux);
     }
     return SUCESSO;
+}
+
+int removerAsAmarrasOrdenado(amarras *cabeca){
+    amarras *aux, *menor;
+    
+    if (cabeca->prox == NULL)
+        return LISTA_VAZIA;
+    else {
+        aux = cabeca->prox;
+        menor = aux;
+        menor->valor = aux->valor;
+        while (aux->prox){
+            if (aux->prox->valor < menor->valor){
+                menor = aux->prox;
+                menor->valor = aux->prox->valor;
+                cabeca = aux;
+            }
+            aux = aux->prox;
+        }
+        cabeca->prox = menor->prox;
+        free(menor);
+        return SUCESSO;
+    }
+}
+
+void selectionSortDasAmarras(amarras *cabeca){
+    amarras *aux, *menor;
+    int temp;
+    
+    while (cabeca->prox != NULL){
+        menor = cabeca->prox;
+        aux = menor->prox;
+        while (aux != NULL){
+            if (aux->valor < menor->valor){
+                menor = aux;
+            }
+            aux = aux->prox;
+        }
+
+        temp = cabeca->prox->valor;
+        cabeca->prox->valor = menor->valor;
+        menor->valor = temp;
+
+        cabeca = cabeca->prox;
+    }
+    
 }
 
 void imprimirLista(amarras *cabeca){
