@@ -20,6 +20,7 @@ int removerAsAmarrasMeioLista(amarras *cabeca, int anteriorRef);
 int removerAsAmarrasFinalLista(amarras *cabeca);
 int removerAsAmarrasOrdenado(amarras *cabeca);
 void selectionSortDasAmarras(amarras *cabeca);
+void bubbleSortDasAmarras(amarras *cabeca);
 void imprimirLista(amarras *cabeca);
 void iWantToBreakFree(amarras **lista);
 
@@ -84,6 +85,10 @@ int main(){
                 selectionSortDasAmarras(cabeca);
             break;
         
+            case 10:
+                bubbleSortDasAmarras(cabeca);
+            break;
+
             default: printf("Opção inválida.\n");
         }
 
@@ -107,7 +112,8 @@ void exibirMenu(){
     printf("6. Remover do  meio\n");
     printf("7. Remover do final\n");
     printf("8. Remover ordenado\n");
-    printf("9. Ordenar as amarras\n");
+    printf("9. Ordenar as amarras com selection\n");
+    printf("10. Ordenar as amarras com bubble\n");
     printf("---------------------------\n");
     printf("Digite sua escolha: ");
 }
@@ -274,6 +280,23 @@ void selectionSortDasAmarras(amarras *cabeca){
         cabeca = cabeca->prox;
     }
     
+}
+
+void bubbleSortDasAmarras(amarras *cabeca){
+    amarras *aux, *i;
+    int temp, trocou = TRUE;
+
+    for (i = cabeca->prox; i->prox != NULL && trocou; i = i->prox){
+        trocou = FALSE;
+        for (aux = cabeca->prox; aux->prox != NULL; aux = aux->prox){
+            if (aux->valor > aux->prox->valor){
+                temp = aux->valor;
+                aux->valor = aux->prox->valor;
+                aux->prox->valor = temp;
+                trocou = TRUE;
+            }
+        }
+    }
 }
 
 void imprimirLista(amarras *cabeca){
